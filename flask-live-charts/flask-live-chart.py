@@ -21,11 +21,11 @@ def live_data(concen_v,concen_d):
 @app.route('/live-data')
 def db_query():
     db = sqlite3.connect("DB2.db")
-    db.row_factory = sqlite3.Row
-    query = db.execute("SELECT a,datetime FROM eyes ORDER BY datetime DESC LIMIT 1").fetchall()
-    #query = db.execute("SELECT value FROM concentration ORDER BY datetime DESC LIMIT 1").fetchall()
-    print(query)
+    #db.row_factory = sqlite3.Row
+    query = db.execute("SELECT value,datetime FROM concentration ORDER BY datetime DESC LIMIT 1").fetchall()
+    print(query[0])
     db.close()
+
     for q in query:
         concen_v=q[0]
         concen_d=q[1]
