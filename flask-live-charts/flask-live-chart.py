@@ -9,7 +9,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return render_template('index.html', data='test')
+    db = sqlite3.connect("DB2.db")
+    #db.row_factory = sqlite3.Row
+    query = db.execute("SELECT posture,datetime FROM pose ORDER BY datetime DESC LIMIT 1").fetchall()
+    db.close()
+    for q in query:
+        pose_v=q[0]
+        pose_d=q[1]
+    return render_template('index.html', data='test', pose_v=pose_v, pose_d=pose_d)
 
 def live_data(concen_v,concen_d):
     # Create a PHP array and echo it as JSON
@@ -23,7 +30,6 @@ def db_query():
     db = sqlite3.connect("DB2.db")
     #db.row_factory = sqlite3.Row
     query = db.execute("SELECT value,datetime FROM concentration ORDER BY datetime DESC LIMIT 1").fetchall()
-    print(query[0])
     db.close()
 
     for q in query:
