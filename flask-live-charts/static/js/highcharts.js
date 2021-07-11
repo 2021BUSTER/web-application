@@ -32,6 +32,12 @@ function requestData() {
     });
 }
 
+Highcharts.setOptions({
+    global: {
+        useUTC: false
+    }
+});
+
 $(document).ready(function() {
     chart = new Highcharts.Chart({
         chart: {
@@ -47,7 +53,12 @@ $(document).ready(function() {
         xAxis: {
             type: 'datetime',
             tickPixelInterval: 150,
-            maxZoom: 20 * 1000
+            maxZoom: 20 * 1000,
+            labels: {
+                formatter: function() {
+                  return Highcharts.dateFormat('%H:%M:%S', this.value);
+                }
+              }
         },
         yAxis: {
             minPadding: 0.2,
@@ -62,6 +73,7 @@ $(document).ready(function() {
             data: []
         }]
     });
+
     chart2   = new Highcharts.Chart({
         chart: {
             renderTo: 'data-container1',
