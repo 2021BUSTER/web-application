@@ -2,7 +2,7 @@ import json
 import sqlite3 
 import sys
 from time import time
-from random import random
+from random import randint
 from flask import Flask, render_template, make_response, redirect, url_for
 
 app = Flask(__name__)
@@ -28,10 +28,10 @@ def live_data():
         pose_d=q[1] 
     print("hi~~~~",concen_d,concen_v,pose_d,pose_v,"hi~~~")
 
-    data = [concen_d,concen_v,pose_d,pose_v]
+    #data = [concen_d,concen_v,pose_d,pose_v]
     #data = [time() * 1000,concen_v,time() * 1000,pose_v]
    
-   # data = [time() * 1000, random() * 1000,time() * 100, random() * 100]
+    data = [time() * 1000, randint(0,4)*5,time() * 1000, randint(0,4)*5]
     #data=[5,5,8,8]
     response = make_response(json.dumps(data))
     response.content_type = 'application/json'
