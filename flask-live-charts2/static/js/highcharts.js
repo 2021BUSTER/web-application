@@ -37,7 +37,15 @@ Highcharts.setOptions({
         useUTC: false
     }
 });
-
+var change = {
+    1: 'Very Low',
+    2: 'Low',
+    3: 'Medium',
+    4: 'High',
+    5: 'Very High',
+    6:'s',
+    7:'d'
+};
 $(document).ready(function() {
     chart = new Highcharts.Chart({
         chart: {
@@ -48,7 +56,7 @@ $(document).ready(function() {
             }
         },
         title: {
-            text: 'BUSTER PROJECT'
+            text: 'FOCUS PERCENT [%]'
         },
         xAxis: {
             type: 'datetime',
@@ -69,7 +77,7 @@ $(document).ready(function() {
             }
         },
         series: [{
-            name: 'date-time',
+            name: 'value',
             data: []
         }]
     });
@@ -83,7 +91,7 @@ $(document).ready(function() {
             }
         },
         title: {
-            text: 'BUSTER PROJECT'
+            text: 'POSE CHART'
         },
         xAxis: {
             type: 'datetime',
@@ -96,11 +104,18 @@ $(document).ready(function() {
             title: {
                 text: 'Value',
                 margin: 80
+            },
+            labels: {
+                formatter: function() {
+                    var value = change[this.value];
+                    return value !== 'undefined' ? value : this.value;
+                }
             }
         },
         series: [{
-            name: 'date-time',
+            name: 'value',
             data: []
         }]
+        
     });
 });
