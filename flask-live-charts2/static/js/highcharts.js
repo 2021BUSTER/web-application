@@ -26,7 +26,7 @@ function requestData() {
             chart2.series[0].addPoint(data2, true, shift2);
 
             // call it again after one second
-            setTimeout(requestData, 60000);
+            setTimeout(requestData, 10000);
         },
         cache: false
     });
@@ -37,15 +37,18 @@ Highcharts.setOptions({
         useUTC: false
     }
 });
+
 var change = {
-    1: 'Very Low',
-    2: 'Low',
-    3: 'Medium',
-    4: 'High',
-    5: 'Very High',
-    6:'s',
-    7:'d'
+    1: 'mother_rightLegs',
+    2: 'rightLean_posture',
+    3: 'twist_rightLegs',
+    4: 'correctPosition',
+    5: 'father_Legs',
+    6: 'twist_leftLegs',
+    7: 'leftLean_posture',
+    8: 'mother_leftLegs'
 };
+
 $(document).ready(function() {
     chart = new Highcharts.Chart({
         chart: {
@@ -96,11 +99,16 @@ $(document).ready(function() {
         xAxis: {
             type: 'datetime',
             tickPixelInterval: 150,
-            maxZoom: 20 * 1000
+            maxZoom: 20 * 1000,
+            labels: {
+                formatter: function() {
+                  return Highcharts.dateFormat('%H:%M:%S', this.value);
+                }
+              }
         },
         yAxis: {
-            minPadding: 0.2,
-            maxPadding: 0.2,
+            // minPadding: 0.2,
+            // maxPadding: 0.2,
             title: {
                 text: 'Value',
                 margin: 80
@@ -110,7 +118,10 @@ $(document).ready(function() {
                     var value = change[this.value];
                     return value !== 'undefined' ? value : this.value;
                 }
-            }
+            },
+            categories: ['mother_rightLegs','rightLean_posture','twist_rightLegs','correctPosition','father_Legs','twist_leftLegs','leftLean_posture','mother_leftLegs']
+            
+            
         },
         series: [{
             name: 'value',
