@@ -1,45 +1,132 @@
-import json
-import sqlite3 
-import sys
-from time import time
-from random import randint
-from flask import Flask, render_template, make_response, redirect, url_for
+var chart;
+var chart2;
 
-app = Flask(__name__)
+/**
+ * Request data from the server, add it to the graph and set a timeout
+ * to request again
+ */
+function requestData() {
+    $.ajax({
+        url: '/live-data',
+        success: function(point) {
+            var series = chart.series[0],
+                shift = series.data.length > 50; // shift if the series is
+                                                 // longer than 20
+            var series2 = chart2.series[0],
+                shift2 = series2.data.length > 50; 
+            
+            var data1=[]
+            var data2=[]
+            data1.push(point[0]);
+            data1.push(point[1]);
+            data2.push(point[2]);
+            data2.push(point[3]);
+            // add the point
+            chart.series[0].addPoint(data1, true, shift);
+            chart2.series[0].addPoint(data2, true, shift2);
 
-@app.route('/')
-def hello_world():
-    return render_template('index.html', data='test')
+            // call it again after one second
+            setTimeout(requestData, 10000);
+        },
+        cache: false
+    });
+}
 
-@app.route('/live-data',methods=["GET", "POST"])
-def live_data():    
-    db = sqlite3.connect("DB2.db")
-    #db.row_factory = sqlite3.Row
-    query = db.execute("SELECT value,datetime FROM concentration ORDER BY datetime DESC LIMIT 1").fetchall()
-    query_pose = db.execute("SELECT value,datetime FROM concentration ORDER BY datetime DESC LIMIT 1").fetchall()
+Highcharts.setOptions({
+    global: {
+        useUTC: false
+    }
+});
 
+var change = {
+    1: 'mother_rightLegs',
+    2: 'rightLean_posture',
+    3: 'twist_rightLegs',
+    4: 'correctPosition',
+    5: 'father_Legs',
+    6: 'twist_leftLegs',
+    7: 'leftLean_posture',
+    8: 'mother_leftLegs'
+};
 
-    for q in query:
-        concen_v=q[0]
-        concen_d=q[1]
-    
-    for q in query_pose:
-        pose_v=q[0]
-        pose_d=q[1] 
-    print("hi~~~~",concen_d,concen_v,pose_d,pose_v,"hi~~~")
+$(document).ready(function() {
+    chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'data-container',
+            defaultSeriesType: 'spline',
+            events: {
+                load: requestData
+            }
+        },
+        title: {
+            text: 'FOCUS PERCENT [%]'
+        },
+        xAxis: {
+            type: 'datetime',
+            tickPixelInterval: 150,
+            maxZoom: 20 * 1000,
+            labels: {
+                formatter: function() {
+                  return Highcharts.dateFormat('%H:%M:%S', this.value);
+                }
+              }
+        },
+        yAxis: {
+            minPadding: 0.2,
+            maxPadding: 0.2,
+            title: {
+                text: 'Value',
+                margin: 80
+            }
+        },
+        series: [{
+            name: 'value',
+            data: []
+        }]
+    });
 
-    #data = [concen_d,concen_v,pose_d,pose_v]
-    #data = [time() * 1000,concen_v,time() * 1000,pose_v]
-   
-    data = [time() * 1000, randint(0,4)*5,time() * 1000, randint(0,4)*5]
-    #data=[5,5,8,8]
-    response = make_response(json.dumps(data))
-    response.content_type = 'application/json'
-    
-    db.close()
-
-    return response
-
-
-if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1', port=5000)
+    chart2   = new Highcharts.Chart({
+        chart: {
+            renderTo: 'data-container1',
+            defaultSeriesType: 'spline',
+            events: {
+                load: requestData
+            }
+        },
+        title: {
+            text: 'POSE CHART'
+        },
+        xAxis: {
+            type: 'datetime',
+            tickPixelInterval: 150,
+            maxZoom: 20 * 1000,
+            labels: {
+                formatter: function() {
+                  return Highcharts.dateFormat('%H:%M:%S', this.value);
+                }
+              }
+        },
+        yAxis: {
+            // minPadding: 0.2,
+            // maxPadding: 0.2,
+            title: {
+                text: 'Value',
+                margin: 80
+            },
+            labels: {
+                formatter: function() {
+                    var value = change[this.value];
+                    return value !== 'undefined' ? value : this.value;
+                }
+            },
+            categories: ['mother_rightLegs','rightLean_posture','twist_rightLegs','correctPosition','father_Legs','twist_leftLegs','leftLean_posture','mother_leftLegs']
+            
+            
+        },
+        series: [{
+            name: 'value',
+            data: []
+        }]
+        
+    });
+});
