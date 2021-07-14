@@ -136,7 +136,7 @@ $(document).ready(function() {
 
         series: [{
             name: 'time [시:분:초]',
-            data: [8]
+            data: []
         }]
         
     });
