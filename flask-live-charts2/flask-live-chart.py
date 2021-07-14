@@ -18,7 +18,6 @@ def live_data():
     query = db.execute("SELECT value,datetime FROM concentration ORDER BY datetime DESC LIMIT 1").fetchall()
     query_pose = db.execute("SELECT posture,datetime FROM pose ORDER BY datetime DESC LIMIT 1").fetchall()
 
-
     for q in query:
         concen_v=q[0]
         concen_d=q[1]
