@@ -38,16 +38,17 @@ Highcharts.setOptions({
     }
 });
 
-var change = {
-    1: 'mother_rightLegs',
-    2: 'rightLean_posture',
-    3: 'twist_rightLegs',
-    4: 'correctPosition',
-    5: 'father_Legs',
-    6: 'twist_leftLegs',
-    7: 'leftLean_posture',
-    8: 'mother_leftLegs'
-};
+// var change = {
+//     0: 'nobody',
+//     1: 'mother_rightLegs',
+//     2: 'rightLean_posture',
+//     3: 'twist_rightLegs',
+//     4: 'correctPosition',
+//     5: 'father_Legs',
+//     6: 'twist_leftLegs',
+//     7: 'leftLean_posture',
+//     8: 'mother_leftLegs'
+// };
 
 $(document).ready(function() {
     chart = new Highcharts.Chart({
@@ -80,7 +81,7 @@ $(document).ready(function() {
             }
         },
         series: [{
-            name: 'value',
+            name: 'time [시:분:초]',
             data: []
         }]
     });
@@ -107,25 +108,35 @@ $(document).ready(function() {
               }
         },
         yAxis: {
-            // minPadding: 0.2,
-            // maxPadding: 0.2,
+            //minPadding: 0.2,
+            //maxPadding: 0.2,
+            visible: true,
+            categories: ['mother_rightLegs','rightLean_posture','twist_rightLegs','correctPosition','father_Legs','twist_leftLegs','leftLean_posture','mother_leftLegs','nobody'],
             title: {
-                text: 'Value',
-                margin: 80
+               text: 'Value',
+               margin: 80
             },
             labels: {
-                formatter: function() {
-                    var value = change[this.value];
-                    return value !== 'undefined' ? value : this.value;
+                formatter: function () {
+                        return this.value;
                 }
-            },
-            categories: ['mother_rightLegs','rightLean_posture','twist_rightLegs','correctPosition','father_Legs','twist_leftLegs','leftLean_posture','mother_leftLegs']
-            
-            
+                // formatter: function() {
+                //     var value = change[this.value];
+                //     return value !== 'undefined' ? value : this.value;
+                // }
+                
+            }
+            // tickInterval: 1,
+            // labels: {
+            //     format: '{value} %'
+            // }
+           
+        
         },
+
         series: [{
-            name: 'value',
-            data: []
+            name: 'time [시:분:초]',
+            data: [8]
         }]
         
     });
